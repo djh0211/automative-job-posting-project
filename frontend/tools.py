@@ -41,3 +41,16 @@ def run_query(sql : str) -> None:
         print(error)
         conn.rollback()  # cur.execute("ROLLBACK;")와 동일
 
+def preprocess_wanted_dataframe(df : pd.DataFrame):
+    base_img_url = "https://static.wanted.co.kr/images/wdes"
+    base_wanted_url = "https://www.wanted.co.kr/wd"
+    df.columns = ["url", "기업 이름", "직무",
+                  "지원마감일", "img", "bookmark"]
+    df["url"] = [os.path.join(base_wanted_url, str(i)) 
+                    for i in df["url"].to_list()]
+    df["img"] = [os.path.join(base_img_url, str(i)) 
+                    for i in df["img"].to_list()]
+    df = df[["bookmark", "img",
+             "기업 이름", "직무", "지원마감일", "url"]]
+    return df
+    
